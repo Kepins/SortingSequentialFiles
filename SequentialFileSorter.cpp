@@ -42,7 +42,49 @@ int SequentialFileSorter::distribiute()
 
 void SequentialFileSorter::merge()
 {
+	// Start writing to the beggining of the t3
+	t3->resetToWrite();
+	// Two records to read to
+	Record t1_record, t2_record;
+	// t1 must contain at least one record
+	t1->nextRecord(&t1_record);
+	// t2 must contain at least one record
+	t2->nextRecord(&t2_record);
 
+	// Bool value to store return value from tx->nextRecord
+	int empty;
+	while (true) {
+		if (t1_record.key < t2_record.key) {
+			// Write record from t1 to t3
+			t3->nextRecord(&t1_record);
+			empty = t1->nextRecord(&t1_record);
+			if (empty) {
+				t3->nextRecord(&t2_record);
+				// Write all other records from t2 to t3
+				while (!t2->nextRecord(&t2_record)) {
+					t3->nextRecord(&t2_record);
+				}
+				break;
+			}
+		}
+		else {
+			// Write record from t2 to t3
+			t3->nextRecord(&t2_record);
+			empty = t2->nextRecord(&t2_record);
+			if (empty) {
+				// Write existing record to t3
+				t3->nextRecord(&t1_record);
+				// Write all other records from t1 to t3
+				while (!t1->nextRecord(&t1_record)) {
+					t3->nextRecord(&t1_record);
+				}
+				break;
+			}
+		}
+	}
+	t1->resetToWrite();
+	t2->resetToWrite();
+	t3->endWrite();
 }
 
 SequentialFileSorter::SequentialFileSorter(Tape* file, Tape* t1, Tape* t2)
@@ -60,18 +102,30 @@ SequentialFileSorter::~SequentialFileSorter()
 void SequentialFileSorter::sortFile()
 {
 	int end = distribiute();
+	/*std::cout << "Distribiution\n\n";
 	std::cout << "t1: \n";
 	t1->debugPrint(std::cout);
 	std::cout << "t2: \n";
 	t2->debugPrint(std::cout);
 	std::cout << "t3: \n";
-	t3->debugPrint(std::cout);
+	t3->debugPrint(std::cout);*/
 	while(!end){
 		merge();
-		end = distribiute();
+		/*std::cout << "Merging\n\n";
+		std::cout << "t1: \n";
 		t1->debugPrint(std::cout);
+		std::cout << "t2: \n";
 		t2->debugPrint(std::cout);
-		t3->debugPrint(std::cout);
+		std::cout << "t3: \n\n";
+		t3->debugPrint(std::cout);*/
+		end = distribiute();
+		/*std::cout << "Distribiution\n";
+		std::cout << "t1: \n";
+		t1->debugPrint(std::cout);
+		std::cout << "t2: \n";
+		t2->debugPrint(std::cout);
+		std::cout << "t3: \n";
+		t3->debugPrint(std::cout);*/
 	}
 	
 

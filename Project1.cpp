@@ -6,9 +6,9 @@
 #include <ctime>       /* time */
 
 // Disk page size in bytes
-const int DISK_PAGE_SIZE = 512;
+const int DISK_PAGE_SIZE = 4096;
 
-const int DIFFERENT_ELEMENTS_POSSIBLE = (1 << 4) -1;
+const int DIFFERENT_ELEMENTS_POSSIBLE = (1 << 20) -1;
 void randomFillRecord(Record* record) {
     for (int i = 0; i < record->numElements; i++) {
         record->elements[i] = rand() % DIFFERENT_ELEMENTS_POSSIBLE; //- (DIFFERENT_ELEMENTS_POSSIBLE >> 1);
@@ -32,7 +32,7 @@ int main()
     SequentialFile seqFile("file.dat", DISK_PAGE_SIZE);
 
     seqFile.resetToWrite();
-    writeRandomRecords(seqFile, 250);
+    writeRandomRecords(seqFile, 25000);
     seqFile.endWrite();
     SequentialFile t1("tape1.dat", DISK_PAGE_SIZE);
     SequentialFile t2("tape2.dat", DISK_PAGE_SIZE);
@@ -40,6 +40,7 @@ int main()
     SequentialFileSorter sorter(&seqFile, &t1, &t2);
     
     sorter.sortFile();
+    seqFile.debugPrint(std::cout);
 
     return 0;
 }
