@@ -32,7 +32,7 @@ int main()
     SequentialFile seqFile("file.dat", DISK_PAGE_SIZE);
 
     seqFile.resetToWrite();
-    writeRandomRecords(seqFile, 5);
+    writeRandomRecords(seqFile, 2);
     seqFile.endWrite();
     seqFile.resetCounters();
     SequentialFile t1("tape1.dat", DISK_PAGE_SIZE);
@@ -43,6 +43,7 @@ int main()
     sorter.sortFile();
     //seqFile.debugPrint(std::cout);
 
+    std::cout << "Number of phases: " << sorter.getPhases() << '\n';
     std::cout << "All disk page reads: " << seqFile.getCounterReads() + t1.getCounterReads() + t2.getCounterReads() << '\n';
     std::cout << "All disk page writes: " << seqFile.getCounterWrites() + t1.getCounterWrites() + t2.getCounterWrites() << '\n';
 

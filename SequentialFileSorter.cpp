@@ -110,9 +110,12 @@ SequentialFileSorter::~SequentialFileSorter()
 
 void SequentialFileSorter::sortFile()
 {
+	phases = 0;
 	int end = distribiute();
 	while(!end){
 		merge();
 		end = distribiute();
+		// increment number of phases
+		phases++;
 	}
 }

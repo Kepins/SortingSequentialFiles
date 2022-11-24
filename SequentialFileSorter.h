@@ -15,6 +15,8 @@ private:
 	*/
 	Tape *t1, *t2, *t3;
 	
+	// Number of phases to sort a file
+	int phases = 0;
 
 	// Distribiute records from t3 to t1, t2
 	// Returns 0 if sorting has not ended yet
@@ -31,6 +33,8 @@ public:
 	// Sort file passed as 'file' in constructor using tapes 't1', 't2'
 	void sortFile();
 
+	// Returns number of phases to sort a file
+	int getPhases() { return phases; }
 };
 
 #endif
