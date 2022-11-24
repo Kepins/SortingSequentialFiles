@@ -16,11 +16,37 @@ void randomFillRecord(Record* record) {
     record->calculateKey();
 }
 
+void manualInput(SequentialFile& seqFile, int n) {
+    Record record;
+    for (int i = 0; i < n; i++) {
+        std::cout << i << ": ";
+        for (int j = 0; j < record.numElements; j++) {
+            std::cin >> record.elements[j];
+        }
+        record.calculateKey();
+        seqFile.nextRecord(&record);
+    }
+}
+
 void writeRandomRecords(SequentialFile& seqFile, int n) {
     Record record;
     for (int i = 0; i < n; i++) {
         randomFillRecord(&record);
         seqFile.nextRecord(&record);
+    }
+}
+
+void fromTxtFile(SequentialFile& seqFile, std::ifstream& file) {
+    Record record;
+    int elem;
+    int i=0;
+    while (file >> elem) {
+        record.elements[i++] = elem;
+        if (i == record.numElements) {
+            record.calculateKey();
+            seqFile.nextRecord(&record);
+            i = 0;
+        }
     }
 }
 
@@ -30,14 +56,48 @@ int main(int argc, char* argv[])
     // Initialize random seed
     srand(time(NULL));
     
+    SequentialFile seqFile("file.dat", DISK_PAGE_SIZE);
+    seqFile.resetToWrite();
+
     int debugging = 0;
 
+    std::cout << "Debug info?\n"
+        << "0. No\n"
+        << "1. Yes\n";
+    std::cin >> debugging;
+    
+    std::cout << "File to sort: \n"
+        << "0. Manual input\n"
+        << "1. Txt file\n"
+        << "2. Random\n";
+    int fileSource;
+    std::cin >> fileSource;
+    switch (fileSource) {
+        case 0: {
+            int n;
+            std::cout << "Number of records: ";
+            std::cin >> n;
+            manualInput(seqFile, n);
+        }break;
+        case 1:{
+            std::string txtFilePath;
+            std::cout << "Txt filepath: ";
+            std::cin >> txtFilePath;
+            std::ifstream txtFile(txtFilePath, std::ios::in);
+            if (!txtFile.is_open()) {
+                std::cerr << "Txt file does not exist";
+                return 1;
+            }
+            fromTxtFile(seqFile, txtFile);
+        }break;
+        case 2: {
+            int n;
+            std::cout << "Number of records: ";
+            std::cin >> n;
+            writeRandomRecords(seqFile, n);
+        }break;
+    }
 
-
-    SequentialFile seqFile("file.dat", DISK_PAGE_SIZE);
-
-    seqFile.resetToWrite();
-    writeRandomRecords(seqFile, 9);
     seqFile.endWrite();
     seqFile.resetCounters();
     if (debugging) {
