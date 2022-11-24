@@ -154,7 +154,7 @@ void SequentialFile::debugPrint(std::ostream& os) {
 		int recordOnPage = i % recordsPerPage;
 		fileStream.seekp(pageNumber * diskPageSize + recordOnPage * Record::size);
 		fileStream.read((char*)(&record.key), Record::size);
-		os << i << "(key: " << record.key << "): ";
+		os << i << "\t(key: " << record.key << "): ";
 		for (int i = 0; i < record.numElements; i++) {
 			os << record.elements[i] << ' ';
 		}

@@ -108,7 +108,7 @@ SequentialFileSorter::~SequentialFileSorter()
 {
 }
 
-void SequentialFileSorter::sortFile()
+void SequentialFileSorter::sortFile(int debugging)
 {
 	phases = 0;
 	int end = distribiute();
@@ -117,5 +117,11 @@ void SequentialFileSorter::sortFile()
 		end = distribiute();
 		// increment number of phases
 		phases++;
+		if (debugging) {
+			std::cout << "After phase " << phases << ": \n";
+			t3->debugPrint(std::cout);
+			std::cout << "\n";
+		}
+
 	}
 }

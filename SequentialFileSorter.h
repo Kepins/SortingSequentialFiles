@@ -31,7 +31,7 @@ public:
 	~SequentialFileSorter();
 
 	// Sort file passed as 'file' in constructor using tapes 't1', 't2'
-	void sortFile();
+	void sortFile(int debugging);
 
 	// Returns number of phases to sort a file
 	int getPhases() { return phases; }
