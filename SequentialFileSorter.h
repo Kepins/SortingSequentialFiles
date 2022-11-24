@@ -17,13 +17,18 @@ private:
 	
 
 	// Distribiute records from t3 to t1, t2
+	// Returns 0 if sorting has not ended yet
 	int distribiute();
 	// Merge runs from t1, t2 to t3
 	void merge();
 public:
+	// Object that sorts file using t1, t2
 	SequentialFileSorter(Tape* file, Tape* t1, Tape* t2);
+
+	// Destructor
 	~SequentialFileSorter();
 
+	// Sort file passed as 'file' in constructor using tapes 't1', 't2'
 	void sortFile();
 
 };

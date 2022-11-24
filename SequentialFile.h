@@ -52,6 +52,10 @@ private:
 	// Read record from a proper offset in diskPageBuffer
 	void readRecord(Record* record, int recordOnPage);
 
+	// Count all reads and writes from a disk
+	int counterReads = 0;
+	int counterWrites = 0;
+
 public:
 	// Constructor
 	SequentialFile(const std::string& filePath, int diskPageSize);
@@ -70,6 +74,13 @@ public:
 
 	// Write out all file content without incrementing accesses counters
 	void debugPrint(std::ostream& os);
+
+	// Reset counters to 0
+	void resetCounters() { counterReads = 0; counterWrites = 0; }
+
+	// Geters for counters
+	int getCounterReads() { return counterReads; }
+	int getCounterWrites() { return counterWrites;  }
 };
 
 #endif

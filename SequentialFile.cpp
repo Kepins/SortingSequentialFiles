@@ -68,12 +68,18 @@ void SequentialFile::flushPageBuffer()
 	fileStream.write(diskPageBuffer, diskPageSize);
 	// Set a flag that there was a flush
 	justFlushed = true;
+
+	// Increment write counter
+	counterWrites++;
 }
 
 
 void SequentialFile::loadPageBuffer() {
 	// Read one page to diskPageBuffer
 	fileStream.read(diskPageBuffer, diskPageSize);
+
+	// Increment read counter
+	counterReads++;
 }
 
 void SequentialFile::readRecord(Record* record, int recordOnPage)

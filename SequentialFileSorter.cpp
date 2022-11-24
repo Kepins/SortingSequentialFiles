@@ -36,7 +36,7 @@ int SequentialFileSorter::distribiute()
 	t1->endWrite();
 	t2->endWrite();
 
-	// Return 
+	// Returns 0 if more phases are needed
 	return !not_sorted;
 }
 
@@ -57,33 +57,40 @@ void SequentialFileSorter::merge()
 		if (t1_record.key < t2_record.key) {
 			// Write record from t1 to t3
 			t3->nextRecord(&t1_record);
+			// Read next record from t1
 			empty = t1->nextRecord(&t1_record);
 			if (empty) {
+				// Write existing record from t2 to t3
 				t3->nextRecord(&t2_record);
 				// Write all other records from t2 to t3
 				while (!t2->nextRecord(&t2_record)) {
 					t3->nextRecord(&t2_record);
 				}
+				// Break from infinite loop
 				break;
 			}
 		}
 		else {
 			// Write record from t2 to t3
 			t3->nextRecord(&t2_record);
+			// Read next record from t2
 			empty = t2->nextRecord(&t2_record);
 			if (empty) {
-				// Write existing record to t3
+				// Write existing record from t1 to t3
 				t3->nextRecord(&t1_record);
 				// Write all other records from t1 to t3
 				while (!t1->nextRecord(&t1_record)) {
 					t3->nextRecord(&t1_record);
 				}
+				// Break from infinite loop
 				break;
 			}
 		}
 	}
+	// t1, t2 will be used for distribiution 
 	t1->resetToWrite();
 	t2->resetToWrite();
+	// Records to be distribiuted will be read from t3
 	t3->endWrite();
 }
 
@@ -93,6 +100,8 @@ SequentialFileSorter::SequentialFileSorter(Tape* file, Tape* t1, Tape* t2)
 	t2(t2),
 	t3(file)
 {
+	t1->resetToWrite();
+	t2->resetToWrite();
 }
 
 SequentialFileSorter::~SequentialFileSorter()
@@ -102,31 +111,8 @@ SequentialFileSorter::~SequentialFileSorter()
 void SequentialFileSorter::sortFile()
 {
 	int end = distribiute();
-	/*std::cout << "Distribiution\n\n";
-	std::cout << "t1: \n";
-	t1->debugPrint(std::cout);
-	std::cout << "t2: \n";
-	t2->debugPrint(std::cout);
-	std::cout << "t3: \n";
-	t3->debugPrint(std::cout);*/
 	while(!end){
 		merge();
-		/*std::cout << "Merging\n\n";
-		std::cout << "t1: \n";
-		t1->debugPrint(std::cout);
-		std::cout << "t2: \n";
-		t2->debugPrint(std::cout);
-		std::cout << "t3: \n\n";
-		t3->debugPrint(std::cout);*/
 		end = distribiute();
-		/*std::cout << "Distribiution\n";
-		std::cout << "t1: \n";
-		t1->debugPrint(std::cout);
-		std::cout << "t2: \n";
-		t2->debugPrint(std::cout);
-		std::cout << "t3: \n";
-		t3->debugPrint(std::cout);*/
 	}
-	
-
 }
