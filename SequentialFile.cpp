@@ -55,7 +55,7 @@ void SequentialFile::writeRecord(Record* record, int recordOnPage)
 	// Copy record's elements to a diskPageBuffer
 	memcpy(
 		diskPageBuffer + recordOnPage * Record::size,
-		record->elements,
+		&record->key,
 		Record::size
 	);
 	// Reset a flush flag
@@ -80,7 +80,7 @@ void SequentialFile::readRecord(Record* record, int recordOnPage)
 {
 	// Copy diskPageBuffer's data to record
 	memcpy(
-		record->elements,
+		&record->key,
 		diskPageBuffer + recordOnPage * Record::size,
 		Record::size
 	);
@@ -147,8 +147,8 @@ void SequentialFile::debugPrint(std::ostream& os) {
 		int pageNumber = i / recordsPerPage;
 		int recordOnPage = i % recordsPerPage;
 		fileStream.seekp(pageNumber * diskPageSize + recordOnPage * Record::size);
-		fileStream.read((char*)(record.elements), Record::size);
-		os << i << ": ";
+		fileStream.read((char*)(&record.key), Record::size);
+		os << i << "(key: " << record.key << "): ";
 		for (int i = 0; i < record.numElements; i++) {
 			os << record.elements[i] << ' ';
 		}
