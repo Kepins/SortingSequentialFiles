@@ -134,6 +134,7 @@
     <ClCompile Include="SequentialFileSorter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DebugLvls.h" />
     <ClInclude Include="Record.h" />
     <ClInclude Include="SequentialFile.h" />
     <ClInclude Include="SequentialFileSorter.h" />

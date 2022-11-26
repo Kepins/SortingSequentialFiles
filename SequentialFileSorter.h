@@ -2,6 +2,7 @@
 #define SEQUENTIAL_FILE_SORTER_H
 
 #include "SequentialFile.h"
+#include "DebugLvls.h"
 
 class SequentialFileSorter
 {
@@ -31,7 +32,7 @@ public:
 	~SequentialFileSorter();
 
 	// Sort file passed as 'file' in constructor using tapes 't1', 't2'
-	void sortFile(int debugging);
+	void sortFile(DebugLvl debugLvl);
 
 	// Returns number of phases to sort a file
 	int getPhases() { return phases; }

@@ -5,6 +5,8 @@
 #include <cstdlib>     /* srand, rand */
 #include <ctime>       /* time */
 
+#include "DebugLvls.h"
+
 // Disk page size in bytes
 const int DISK_PAGE_SIZE = 4096;
 
@@ -50,7 +52,6 @@ void fromTxtFile(SequentialFile& seqFile, std::ifstream& file) {
     }
 }
 
-
 int main(int argc, char* argv[])
 {
     // Initialize random seed
@@ -59,13 +60,15 @@ int main(int argc, char* argv[])
     SequentialFile seqFile("file.dat", DISK_PAGE_SIZE);
     seqFile.resetToWrite();
 
-    int debugging = 0;
+    int input = 0;
 
     std::cout << "Debug info?\n"
         << "0. No\n"
-        << "1. Yes\n";
-    std::cin >> debugging;
-    
+        << "1. Normal\n"
+        << "2. Verbose\n";
+    std::cin >> input;
+    DebugLvl debugLvl = static_cast<DebugLvl>(input);
+
     std::cout << "File to sort: \n"
         << "0. Manual input\n"
         << "1. Txt file\n"
@@ -100,7 +103,7 @@ int main(int argc, char* argv[])
 
     seqFile.endWrite();
     seqFile.resetCounters();
-    if (debugging) {
+    if (debugLvl != No) {
         std::cout << "Initial file: \n";
         seqFile.debugPrint(std::cout);
         std::cout << "\n";
@@ -110,8 +113,8 @@ int main(int argc, char* argv[])
 
     SequentialFileSorter sorter(&seqFile, &t1, &t2);
     
-    sorter.sortFile(debugging);
-    if (debugging) {
+    sorter.sortFile(debugLvl);
+    if (debugLvl != No) {
         std::cout << "Sorted: \n";
         seqFile.debugPrint(std::cout);
         std::cout << "\n";
