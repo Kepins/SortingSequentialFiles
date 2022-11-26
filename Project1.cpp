@@ -120,11 +120,11 @@ int main(int argc, char* argv[])
         std::cout << "\n";
     }
 
-
+    
     std::cout << "Number of phases: " << sorter.getPhases() << '\n';
     std::cout << "All disk page reads: " << seqFile.getCounterReads() + t1.getCounterReads() + t2.getCounterReads() << '\n';
     std::cout << "All disk page writes: " << seqFile.getCounterWrites() + t1.getCounterWrites() + t2.getCounterWrites() << '\n';
-
+    
     return 0;
 }
 

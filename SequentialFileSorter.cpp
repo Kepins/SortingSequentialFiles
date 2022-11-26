@@ -74,7 +74,7 @@ void SequentialFileSorter::merge()
 				prevkey_t2 = t2_record.key;
 				// Read record from t2
 				t2_empty = t2->nextRecord(&t2_record);
-				while (!t2_empty && prevkey_t2 < t2_record.key) {
+				while (!t2_empty && prevkey_t2 <= t2_record.key) {
 					// Write next record from t2 to t3
 					t3->nextRecord(&t2_record);
 					// Store prev key from t2
@@ -102,7 +102,7 @@ void SequentialFileSorter::merge()
 				prevkey_t1 = t1_record.key;
 				// Read record from t1
 				t1_empty = t1->nextRecord(&t1_record);
-				while (!t1_empty && prevkey_t1 < t1_record.key) {
+				while (!t1_empty && prevkey_t1 <= t1_record.key) {
 					// Write next record from t1 to t3
 					t3->nextRecord(&t1_record);
 					// Store prev key from t1
@@ -156,13 +156,22 @@ void SequentialFileSorter::sortFile(DebugLvl debugLvl)
 {
 	phases = 0;
 	int end = distribiute();
+	std::cout << "t1\n";
+	t1->debugPrint(std::cout);
+	std::cout << "t2\n";
+	t2->debugPrint(std::cout);
 	while(!end){
 		merge();
 		end = distribiute();
 		// increment number of phases
 		phases++;
-		if (debugLvl == Verbose) {
+		if (debugLvl == Verbose && !end) {
 			std::cout << "After phase " << phases << ": \n";
+			std::cout << "t1\n";
+			t1->debugPrint(std::cout); 
+			std::cout << "t2\n";
+			t2->debugPrint(std::cout);
+			std::cout << "t3\n";
 			t3->debugPrint(std::cout);
 			std::cout << "\n";
 		}

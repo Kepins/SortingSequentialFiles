@@ -53,8 +53,8 @@ private:
 	void readRecord(Record* record, int recordOnPage);
 
 	// Count all reads and writes from a disk
-	int counterReads = 0;
-	int counterWrites = 0;
+	long long counterReads = 0;
+	long long counterWrites = 0;
 
 public:
 	// Constructor
@@ -79,8 +79,8 @@ public:
 	void resetCounters() { counterReads = 0; counterWrites = 0; }
 
 	// Geters for counters
-	int getCounterReads() { return counterReads; }
-	int getCounterWrites() { return counterWrites;  }
+	long long getCounterReads() { return counterReads; }
+	long long getCounterWrites() { return counterWrites;  }
 };
 
 #endif
