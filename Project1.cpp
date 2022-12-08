@@ -10,10 +10,10 @@
 // Disk page size in bytes
 const int DISK_PAGE_SIZE = 4096;
 
-const int DIFFERENT_ELEMENTS_POSSIBLE = (1 << 5) -1;
+const int DIFFERENT_ELEMENTS_POSSIBLE = (1 << 12) -1;
 void randomFillRecord(Record* record) {
     for (int i = 0; i < record->numElements; i++) {
-        record->elements[i] = rand() % DIFFERENT_ELEMENTS_POSSIBLE; //- (DIFFERENT_ELEMENTS_POSSIBLE >> 1);
+        record->elements[i] = rand() % DIFFERENT_ELEMENTS_POSSIBLE - (DIFFERENT_ELEMENTS_POSSIBLE >> 1);
     }
     record->calculateKey();
 }

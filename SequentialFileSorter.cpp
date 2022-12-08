@@ -156,10 +156,6 @@ void SequentialFileSorter::sortFile(DebugLvl debugLvl)
 {
 	phases = 0;
 	int end = distribiute();
-	std::cout << "t1\n";
-	t1->debugPrint(std::cout);
-	std::cout << "t2\n";
-	t2->debugPrint(std::cout);
 	while(!end){
 		merge();
 		end = distribiute();
@@ -167,11 +163,6 @@ void SequentialFileSorter::sortFile(DebugLvl debugLvl)
 		phases++;
 		if (debugLvl == Verbose && !end) {
 			std::cout << "After phase " << phases << ": \n";
-			std::cout << "t1\n";
-			t1->debugPrint(std::cout); 
-			std::cout << "t2\n";
-			t2->debugPrint(std::cout);
-			std::cout << "t3\n";
 			t3->debugPrint(std::cout);
 			std::cout << "\n";
 		}
